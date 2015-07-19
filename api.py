@@ -1,6 +1,7 @@
 import requests
 import logging
 from urllib.parse import urljoin
+import random
 
 logger = logging.getLogger()
 
@@ -81,3 +82,30 @@ class CatFactAPI(API):
 
     def facts(self, number=1):
         return self.get('facts', number=number)
+
+
+class UrbanDictionaryAPI(API):
+
+    def __init__(self):
+        self.url = 'http://api.urbandictionary.com/v0/'
+
+    def request(self, method, endpoint, **kwargs):
+        content = super(UrbanDictionaryAPI, self).request(method, endpoint, **kwargs)
+        return content['list']
+
+    def define(self, term):
+        return self.get('define', term=term)
+
+    def top_definition(self, term):
+        definitions = self.define(term)
+        if len(definitions) < 1:
+            return None
+        else:
+            return definitions[0]
+
+    def random_definition(self, term):
+        definitions = self.define(term)
+        if len(definitions) < 1:
+            return None
+        else:
+            return random.choice(definitions)

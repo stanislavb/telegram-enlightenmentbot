@@ -2,15 +2,16 @@
 import argparse
 import logging
 import time
-from api import TelegramAPI, NumbersAPI, CatFactAPI
+from api import TelegramAPI, NumbersAPI, CatFactAPI, UrbanDictionaryAPI
 
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
 boturl = 'https://api.telegram.org/bot'
-commands = ['/number', '/cat']
+commands = ['/number', '/cat', '/define']
 num = NumbersAPI()
 cat = CatFactAPI()
+urban = UrbanDictionaryAPI()
 
 
 def command(command, text):
@@ -26,6 +27,14 @@ def command(command, text):
         return result
     elif command == '/cat':
         return cat.facts(number=1)[0]
+    elif command == '/define':
+        definition = urban.top_definition(term=text)
+        if definition is None:
+            return 'No definition of "{}"'.format(text)
+        returntext = "Definition of {}:\n\n{}".format(definition['word'], definition['definition'])
+        if definition['example']:
+            returntext += "\n\nExample:\n{}".format(definition['example'])
+        return returntext
 
 
 if __name__ == "__main__":
