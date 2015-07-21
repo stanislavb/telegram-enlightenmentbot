@@ -23,8 +23,7 @@ class TelegramBot:
         myself = self.api.get_me()
         self.id = myself['id']
         self.first_name = myself['first_name']
-        self.last_name = myself.get('last_name')
-        self.username = myself.get('username')
+        self.username = myself['username']
 
         # Define valid commands
         self.commands = {
