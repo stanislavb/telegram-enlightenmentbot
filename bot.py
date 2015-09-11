@@ -99,10 +99,13 @@ if __name__ == "__main__":
     while True:
         logger.info('Waiting {} seconds'.format(wait))
         time.sleep(wait)
-        updates = bot.api.get_updates(
-            offset=offset,
-            limit=args.limit,
-            timeout=args.timeout)
+        try:
+            updates = bot.api.get_updates(
+                offset=offset,
+                limit=args.limit,
+                timeout=args.timeout)
+        except:
+            logger.exception()
         for update in updates:
             if 'message' in update:
                 bot.respond(update['message'])
